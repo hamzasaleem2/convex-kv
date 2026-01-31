@@ -1,0 +1,237 @@
+:root {
+  --bg-dark: #000000;
+  --bg-card: #111111;
+  --bg-hover: #1a1a1a;
+  --border: #222222;
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --accent: #0070f3;
+  --accent-soft: rgba(0, 112, 243, 0.1);
+  --error: #ff4d4d;
+  --success: #0070f3;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  height: 100vh;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-header {
+  height: 56px;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.logo {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-size: 16px;
+}
+
+.workbench {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  overflow: hidden;
+}
+
+.browser-panel {
+  background: var(--bg-dark);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.browser-header {
+  padding: 24px;
+}
+
+.search-box {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: white;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.key-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.key-item {
+  padding: 10px 24px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.key-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.key-item.selected {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-right: 2px solid var(--accent);
+}
+
+.key-type-pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 12px;
+  background: var(--border);
+  color: var(--text-secondary);
+}
+
+.workspace {
+  background: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.value-editor {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  max-width: 900px;
+}
+
+.editor-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editor-body {
+  padding: 24px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.editable-textarea {
+  width: 100%;
+  min-height: 300px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  resize: vertical;
+  outline: none;
+}
+
+button {
+  background: var(--text-primary);
+  color: var(--bg-dark);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button.secondary {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+button.danger {
+  color: var(--error);
+  background: transparent;
+}
+
+button.danger:hover {
+  background: rgba(255, 77, 77, 0.1);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 480px;
+  padding: 32px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: white;
+  font-family: var(--font-mono);
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.empty-state {
+  text-align: center;
+  padding-top: 100px;
+  color: var(--text-secondary);
+}

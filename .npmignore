@@ -1,0 +1,16 @@
+# Exclude source testing and configuration
+src/**/*.test.ts
+src/**/setup.test.ts
+src/test.ts
+
+# Exclude the example project
+example/
+
+# Exclude development configs
+tsconfig*.json
+eslint.config.js
+vitest.config.js
+package-lock.json
+
+# Exclude build metadata
+*.tsbuildinfo

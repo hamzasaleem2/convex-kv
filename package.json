@@ -1,0 +1,76 @@
+{
+  "name": "@hamzasaleemorg/convex-kv",
+  "description": "Hierarchical Key-Value store for Convex",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "repository": "github:hamzasaleem2/convex-kv",
+  "homepage": "https://github.com/hamzasaleem2/convex-kv#readme",
+  "keywords": [
+    "convex",
+    "component",
+    "kv",
+    "redis"
+  ],
+  "scripts": {
+    "dev": "run-p -r 'dev:*'",
+    "dev:backend": "convex dev --typecheck-components",
+    "dev:frontend": "cd example && vite --clearScreen false",
+    "build": "npm run build:codegen && tsc --project ./tsconfig.build.json",
+    "build:codegen": "npx convex codegen --component-dir ./src/component",
+    "build:clean": "rm -rf dist *.tsbuildinfo && npm run build",
+    "typecheck": "tsc --noEmit && tsc -p example && tsc -p example/convex",
+    "lint": "eslint .",
+    "test": "vitest run --typecheck",
+    "test:watch": "vitest --typecheck"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.js"
+    },
+    "./test": "./src/test.ts",
+    "./_generated/component.js": {
+      "types": "./dist/component/_generated/component.d.ts"
+    },
+    "./_generated/component": {
+      "types": "./dist/component/_generated/component.d.ts"
+    },
+    "./convex.config.js": {
+      "types": "./dist/component/convex.config.d.ts",
+      "default": "./dist/component/convex.config.js"
+    },
+    "./convex.config": {
+      "types": "./dist/component/convex.config.d.ts",
+      "default": "./dist/component/convex.config.js"
+    }
+  },
+  "peerDependencies": {
+    "convex": "^1.31.7"
+  },
+  "devDependencies": {
+    "@convex-dev/eslint-plugin": "^1.1.1",
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "9.39.2",
+    "@types/node": "^24.10.9",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "convex": "1.31.7",
+    "convex-test": "0.0.41",
+    "eslint": "9.39.2",
+    "npm-run-all2": "8.0.4",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "typescript": "5.9.3",
+    "vite": "7.3.1",
+    "vitest": "4.0.18"
+  },
+  "types": "./dist/client/index.d.ts",
+  "module": "./dist/client/index.js"
+}
