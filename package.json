@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "license": "Apache-2.0",
   "type": "module",
+  "workspaces": [
+    "example"
+  ],
   "repository": "github:hamzasaleem2/convex-kv",
   "homepage": "https://github.com/hamzasaleem2/convex-kv#readme",
   "keywords": [
