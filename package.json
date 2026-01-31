@@ -22,6 +22,7 @@
     "dev": "run-p -r 'dev:*'",
     "dev:backend": "convex dev --typecheck-components",
     "dev:frontend": "cd example && vite --clearScreen false",
+    "build:frontend": "cd example && vite build",
     "build": "tsc --project ./tsconfig.build.json",
     "build:codegen": "npx convex codegen --component-dir ./src/component && npm run build",
     "build:clean": "npm run clean && npm run build",
