@@ -1,21 +1,19 @@
-# Convex KV
+# Convex KV Component
 
-A hierarchical key-value store component for Convex. Supports pseudo-tables, caching, and document storage with ordered keys and automatic expiration.
+[![npm version](https://img.shields.io/npm/v/@hamzasaleemorg/convex-kv.svg)](https://www.npmjs.com/package/@hamzasaleemorg/convex-kv)
+[![npm downloads](https://img.shields.io/npm/dm/@hamzasaleemorg/convex-kv.svg)](https://www.npmjs.com/package/@hamzasaleemorg/convex-kv)
+[![License](https://img.shields.io/npm/l/@hamzasaleemorg/convex-kv.svg)](https://www.npmjs.com/package/@hamzasaleemorg/convex-kv)
 
-## Features
-
-- Hierarchical Keys: Array-based paths like `["users", "123", "profile"]`.
-- Ordered Scans: Lexicographical storage for efficient prefix range queries.
-- Time-To-Live (TTL): Optional automatic expiration for keys.
-- Atomic Operations: Operations run in standard Convex transactions.
-- Recursive Deletion: Automatic batching for large prefix clears.
-- Typed Clients: TypeScript generics and optional runtime validation.
+A hierarchical, ordered key-value store for Convex. Replace relational boilerplate with a simple `get`/`set` API, featuring automatic TTL and recursive prefix deletion.
 
 ## Installation
 
-Create or update `convex/convex.config.ts`:
+```bash
+npm install @hamzasaleemorg/convex-kv
+```
 
-```ts
+```typescript
+// convex/convex.config.ts
 import { defineApp } from "convex/server";
 import convexKv from "@hamzasaleemorg/convex-kv/convex.config.js";
 
@@ -25,84 +23,96 @@ app.use(convexKv);
 export default app;
 ```
 
-## Usage
+## Quick Start: Expiring Invite Links 🚀
 
-### Client Initialization
+Manage one-time magic links or invite codes without cluttering your main schema or writing cleanup logic.
 
-```ts
-import { components } from "./_generated/api";
+```typescript
+// convex/invites.ts
 import { kvClientFactory } from "@hamzasaleemorg/convex-kv";
+import { components } from "./_generated/api";
+import { mutation } from "./_generated/server";
+import { v } from "convex/values";
 
 const kv = kvClientFactory(components.convexKv);
+const invites = kv.use<{ email: string; role: string }>(["invites"]);
 
-// Create a typed client for a specific prefix
-const store = kv.use<{ name: string }>(["users"]);
-```
-
-### Basic Operations
-
-```ts
-// Store a value with optional TTL (1 hour)
-await store.set(ctx, ["123"], { name: "Alice" }, { ttl: 3600000 });
-
-// Retrieve a value
-const user = await store.get(ctx, ["123"]);
-
-// Check existence
-const exists = await store.has(ctx, ["123"]);
-
-// Delete a key
-await store.delete(ctx, ["123"]);
-```
-
-### Hierarchical Queries
-
-```ts
-// Fetch all entries under a prefix
-const allUsers = await store.getAll(ctx, []);
-
-// Paginate entries
-const page = await store.list(ctx, [], { limit: 10 });
-
-// Recursively delete a sub-tree
-await store.deleteAll(ctx, []);
-```
-
-### Expiration (TTL)
-
-To physically remove expired keys, expose a mutation in your `convex/` folder and schedule it via crons.
-
-```ts
-// convex/my_kv.ts
-import { mutation } from "./_generated/server";
-import { components } from "./_generated/api";
-
-export const vacuum = mutation({
-  handler: async (ctx) => {
-    await ctx.runMutation(components.convexKv.kv.vacuum);
+export const createInvite = mutation({
+  args: { email: v.string(), role: v.string() },
+  handler: async (ctx, args) => {
+    const inviteCode = Math.random().toString(36).substring(7);
+    
+    // Store invite that automatically EXPIRES in 48 hours
+    await invites.set(ctx, [inviteCode], { 
+      email: args.email, 
+      role: args.role 
+    }, { ttl: 48 * 60 * 60 * 1000 });
+    
+    return inviteCode;
   },
 });
 
-// convex/crons.ts
-import { cronJobs } from "convex/server";
-import { api } from "./_generated/api";
+export const acceptInvite = mutation({
+  args: { code: v.string() },
+  handler: async (ctx, args) => {
+    // If the link is older than 48hrs, .get() returns null automatically
+    const invite = await invites.get(ctx, [args.code]);
+    if (!invite) throw new Error("Invite invalid or expired");
+    
+    // ... create membership logic ...
 
-const crons = cronJobs();
-crons.interval("vacuum", { minutes: 5 }, api.my_kv.vacuum);
-export default crons;
+    await invites.delete(ctx, [args.code]);
+  },
+});
 ```
 
+---
+
+## 🛠️ Why use this?
+
+1.  **Zero Schema Maintenance**: Store any JSON-serializable data instantly. No new tables, no indexes to wait for.
+2.  **Organized Hierarchy**: Use array keys like `["org", orgId, "settings"]` to naturally isolate data.
+3.  **Automatic TTL**: Set a `ttl` (ms) on any key and it disappear from queries as soon as it expires.
+4.  **Ordered Scans**: Keys are stored lexicographically. Scan through millions of keys by prefix instantly.
+5.  **Batched Deletes**: Clear an entire "folder" of data with `deleteAll(["prefix"])`. It automatically handles large datasets in the background.
 
 ## API Reference
 
-### `KeyValueStore<V>`
+### Initializing the Client
+You can use the global client or scope it to a specific recursive namespace:
 
-- `get(ctx, key)`: Returns the value or null if missing/expired.
-- `getWithMetadata(ctx, key)`: Returns the value, metadata, and timestamps.
-- `set(ctx, key, value, options?)`: Stores a value. Options: `ttl`, `expiresAt`, `metadata`.
-- `delete(ctx, key)`: Removes a single key.
-- `has(ctx, key)`: Returns boolean existence.
-- `list(ctx, prefix, options?)`: Paginated scan. Options: `limit`, `cursor`, `includeValues`.
-- `getAll(ctx, prefix, options?)`: Fetch all entries under prefix.
-- `deleteAll(ctx, prefix)`: Batched recursive deletion.
-- `withPrefix(prefix, validator?)`: Creates a scoped sub-store.
+```typescript
+const kv = kvClientFactory(components.convexKv);
+
+// Everything sent through 'users' will stay in that folder
+const users = kv.use<{ email: string }>(["users"]);
+```
+
+### Core Operations
+| Method | Description |
+| :--- | :--- |
+| `get(key)` | Returns value or `null` if missing/expired. |
+| `set(key, val, options?)` | Stores value. Options: `ttl` (ms), `expiresAt`, `metadata`. |
+| `has(key)` | Fast boolean check for existence (returns false if expired). |
+| `delete(key)` | Removes a specific key. |
+
+### Hierarchical & Range Operations
+| Method | Description |
+| :--- | :--- |
+| `list(prefix, options?)` | Paginated scan within a namespace. |
+| `getAll(prefix)` | Returns all entries under a prefix (max 1000). |
+| `deleteAll(prefix)` | **Recursive Delete**. Safely clears an entire prefix tree in the background. |
+
+---
+
+## Development & Testing
+
+```bash
+npm install
+npm run dev   # Starts the KV Explorer & Build Watcher
+npm test      # Runs full suite (Unit + Component Integration)
+```
+
+## License
+
+Apache-2.0
