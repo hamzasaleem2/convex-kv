@@ -1,13 +1,16 @@
 {
   "name": "@hamzasaleemorg/convex-kv",
   "description": "Hierarchical Key-Value store for Convex",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "Apache-2.0",
   "type": "module",
   "workspaces": [
     "example"
   ],
-  "repository": "github:hamzasaleem2/convex-kv",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hamzasaleem2/convex-kv.git"
+  },
   "homepage": "https://github.com/hamzasaleem2/convex-kv#readme",
   "keywords": [
     "convex",
