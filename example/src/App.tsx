@@ -48,10 +48,14 @@ export default function App() {
 
   useEffect(() => {
     if (selectedEntry) {
-      setEditValue(JSON.stringify(selectedEntry.value, null, 2)); // eslint-disable-line react-hooks/set-state-in-effect
-      setIsModifying(false); // eslint-disable-line react-hooks/set-state-in-effect
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setEditValue(JSON.stringify(selectedEntry.value, null, 2));
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsModifying(false);
     }
   }, [selectedEntry]);
+
+
 
 
 
