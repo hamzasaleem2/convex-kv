@@ -3,8 +3,8 @@ import { kvClientFactory } from "./index.js";
 import { components, initConvexTest } from "./setup.test.js";
 
 const kv = kvClientFactory(components.convexKv);
-// @ts-expect-error - store is defined but intentionally unused for now in this skeleton test
 const _store = kv.use<{ name: string }>(["test"]);
+
 
 
 describe("client tests", () => {
