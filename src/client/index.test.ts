@@ -1,7 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { kvClientFactory } from "./index.js";
 import { components, initConvexTest } from "./setup.test.js";
-import { mutation, query } from "../../example/convex/_generated/server.js";
 import { v } from "convex/values";
 
 const kv = kvClientFactory(components.convexKv);
