@@ -18,21 +18,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate code
-        run: |
-          npx convex codegen --component-dir ./src/component
-          cd example && npx convex codegen
-        env:
-          CONVEX_DEPLOYMENT: dev:dummy-123
+      - name: Run tests
+        run: npm test
+
+      - name: Run lint
+        run: npm run lint
 
       - name: Check types
         run: npm run typecheck
-
-      - name: Run tests
-        run: npm run test
-
-      - name: Lint
-        run: npm run lint
 
       - name: Build
         run: npm run build:clean
