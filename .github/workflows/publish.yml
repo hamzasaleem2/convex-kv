@@ -22,6 +22,8 @@ jobs:
         run: |
           npx convex codegen --component-dir ./src/component
           cd example && npx convex codegen
+        env:
+          CONVEX_DEPLOYMENT: dev:dummy-123
 
       - name: Run checks
         run: |
