@@ -5,15 +5,13 @@ All notable changes to this project will be documented in this file.
 ## [1.0.1] - 2026-01-31
 
 ### Added
-- Professional metrics badges to README.
-- Real-world "Expiring Invite Links" example to Quick Start.
+- Comprehensive "Quick Start" to README featuring a magic link / invitation system example.
+- Professional badges to README for versioning and downloads.
 
 ### Fixed
-- Resolved `react-hooks/purity` errors in the Explorer app.
-- Added live-updating TTL countdowns in the UI.
 - Fixed GitHub Actions permissions for automatic Release creation.
-- Synced project structure and dependencies with `@hamzasaleemorg/convex-comments`.
-- Committed generated types to ensure CI passes without a live deployment.
+- Resolved React purity and idempotent render warnings in the Explorer UI.
+- Synced build scripts and devDependencies with standard component patterns.
 
 ## [1.0.0] - 2026-01-31
 
@@ -23,5 +21,4 @@ All notable changes to this project will be documented in this file.
 - Time-To-Live (TTL) support for automatic expiration.
 - Atomic operations with hierarchical isolation.
 - Recursive prefix deletion with background batching.
-- Typed client factory with `withPrefix` support.
 - Interactive KV Explorer dashboard.
