@@ -1,8 +1,9 @@
 /// <reference types="vite/client" />
 
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 import { api } from "./_generated/api.js";
 import { initConvexTest } from "./setup.test.js";
+
 
 describe("component kv", () => {
   test("basic kv operations", async () => {

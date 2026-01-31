@@ -41,10 +41,11 @@ export const remove = mutation({
 });
 export const vacuum = mutation({
   handler: async (ctx) => {
-    const rawKv = kv.use([]);
+    const _rawKv = kv.use([]);
     return await ctx.runMutation(components.convexKv.kv.vacuum, {});
   },
 });
+
 
 
 export const list = query({

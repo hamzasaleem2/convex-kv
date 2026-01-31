@@ -18,6 +18,12 @@ export default function App() {
 
   const vacuum = useMutation(api.example.vacuum);
 
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   const [selectedKey, setSelectedKey] = useState<string[] | null>(null);
 
   const [search, setSearch] = useState("");
@@ -42,10 +48,13 @@ export default function App() {
 
   useEffect(() => {
     if (selectedEntry) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEditValue(JSON.stringify(selectedEntry.value, null, 2));
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsModifying(false);
     }
   }, [selectedEntry]);
+
 
   const handleSave = async () => {
     if (!selectedKey) return;
@@ -53,7 +62,7 @@ export default function App() {
       const parsedValue = JSON.parse(editValue);
       await setKv({ key: selectedKey, value: parsedValue });
       setIsModifying(false);
-    } catch (err) {
+    } catch {
       alert("Invalid JSON format");
     }
   };
@@ -75,10 +84,11 @@ export default function App() {
       setNewValue("");
       setNewTtl("");
       setSelectedKey(keyParts);
-    } catch (err) {
+    } catch {
       alert("Error adding key");
     }
   };
+
 
   const getValueType = (val: any) => {
     if (val === undefined) return null;
@@ -111,7 +121,7 @@ export default function App() {
             {filteredEntries.map(entry => {
               const type = getValueType(entry.value);
               const isSelected = JSON.stringify(selectedKey) === JSON.stringify(entry.key);
-              const isExpired = entry.expiresAt && entry.expiresAt < Date.now();
+              const isExpired = entry.expiresAt && entry.expiresAt < now;
               return (
                 <div
                   key={entry.key.join(":")}
@@ -123,7 +133,7 @@ export default function App() {
                   <span>{entry.key.join(":") || "/"}</span>
                   {entry.expiresAt && !isExpired && (
                     <span style={{ fontSize: 10, color: 'var(--accent)', marginLeft: 'auto' }}>
-                      {Math.ceil((entry.expiresAt - Date.now()) / 1000)}s
+                      {Math.ceil((entry.expiresAt - now) / 1000)}s
                     </span>
                   )}
                 </div>
@@ -182,10 +192,10 @@ export default function App() {
                   <span>Type: {getValueType(selectedEntry.value)}</span>
                   <span>Updated: {new Date(selectedEntry.updatedAt).toLocaleString()}</span>
                   {selectedEntry.expiresAt && (
-                    <span style={{ color: selectedEntry.expiresAt < Date.now() ? 'var(--error)' : 'var(--accent)' }}>
-                      {selectedEntry.expiresAt < Date.now()
+                    <span style={{ color: selectedEntry.expiresAt < now ? 'var(--error)' : 'var(--accent)' }}>
+                      {selectedEntry.expiresAt < now
                         ? 'EXPIRED'
-                        : `Expires in ${Math.ceil((selectedEntry.expiresAt - Date.now()) / 60000)} mins`}
+                        : `Expires in ${Math.ceil((selectedEntry.expiresAt - now) / 60000)} mins`}
                     </span>
                   )}
                 </div>
@@ -199,6 +209,7 @@ export default function App() {
           )}
         </main>
       </div>
+
 
       {showAddModal && (
         <div className="modal-overlay">

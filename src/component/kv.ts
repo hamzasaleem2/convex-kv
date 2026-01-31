@@ -1,13 +1,9 @@
 import { v } from "convex/values";
 import {
-  internalMutation,
-  internalQuery,
   mutation,
   query,
 } from "./_generated/server.js";
-import { api, internal } from "./_generated/api.js";
-
-
+import { api } from "./_generated/api.js";
 
 const DELIMITER = "\x00";
 
@@ -39,13 +35,6 @@ export const vacuum = mutation({
     }
     return { count: deleted };
   },
-});
-
-
-const entryValidator = v.object({
-  key: v.array(v.string()),
-  value: v.any(),
-  updatedAt: v.number(),
 });
 
 export const get = query({
