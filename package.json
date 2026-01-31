@@ -1,7 +1,7 @@
 {
   "name": "@hamzasaleemorg/convex-kv",
   "description": "Hierarchical Key-Value store for Convex",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "Apache-2.0",
   "type": "module",
   "workspaces": [
