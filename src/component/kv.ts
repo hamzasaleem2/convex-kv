@@ -17,6 +17,7 @@ function joinKey(key: string[]): string {
  */
 export const vacuum = mutation({
   args: {},
+  returns: v.object({ count: v.number() }),
   handler: async (ctx) => {
     const now = Date.now();
     // Only fetch keys that EXPLICITLY have an expiresAt field and it is in the past
@@ -168,6 +169,19 @@ export const list = query({
     cursor: v.optional(v.string()),
     includeValues: v.optional(v.boolean()),
   },
+  returns: v.object({
+    entries: v.array(
+      v.object({
+        key: v.array(v.string()),
+        value: v.optional(v.any()),
+        metadata: v.optional(v.any()),
+        updatedAt: v.number(),
+        expiresAt: v.optional(v.number()),
+      })
+    ),
+    continueCursor: v.string(),
+    isDone: v.boolean(),
+  }),
   handler: async (ctx, args) => {
     const pathPrefix = joinKey(args.prefix);
     const query = ctx.db.query("kv").withIndex("path", (q) => getPrefixRange(q, pathPrefix));
@@ -199,6 +213,15 @@ export const getAll = query({
     prefix: v.array(v.string()),
     includeValues: v.optional(v.boolean()),
   },
+  returns: v.array(
+    v.object({
+      key: v.array(v.string()),
+      value: v.optional(v.any()),
+      metadata: v.optional(v.any()),
+      updatedAt: v.number(),
+      expiresAt: v.optional(v.number()),
+    })
+  ),
   handler: async (ctx, args) => {
     const pathPrefix = joinKey(args.prefix);
     const entries = await ctx.db.query("kv").withIndex("path", (q) =>
@@ -222,6 +245,10 @@ export const getAll = query({
 
 export const deleteAll = mutation({
   args: { prefix: v.array(v.string()) },
+  returns: v.object({
+    deletedCount: v.number(),
+    hasMore: v.boolean(),
+  }),
   handler: async (ctx, args) => {
     const pathPrefix = joinKey(args.prefix);
     const entries = await ctx.db.query("kv").withIndex("path", (q) =>

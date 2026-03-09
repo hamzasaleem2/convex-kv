@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3] - 2026-03-09
+
+### Fixed
+- Added explicitly typed `returns` validators to `vacuum`, `list`, `getAll`, and `deleteAll` queries/mutations to comply with Convex Component publishing requirements.
+
 ## [1.0.2] - 2026-01-31
 
 ### Added
