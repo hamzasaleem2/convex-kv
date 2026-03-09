@@ -1,5 +1,6 @@
 # Convex KV Component
 
+[![Convex Component](https://www.convex.dev/components/badge/hamzasaleemorg/convex-kv)](https://www.convex.dev/components/hamzasaleemorg/convex-kv)
 [![npm version](https://img.shields.io/npm/v/@hamzasaleemorg/convex-kv.svg)](https://www.npmjs.com/package/@hamzasaleemorg/convex-kv)
 [![npm downloads](https://img.shields.io/npm/dm/@hamzasaleemorg/convex-kv.svg)](https://www.npmjs.com/package/@hamzasaleemorg/convex-kv)
 [![License](https://img.shields.io/npm/l/@hamzasaleemorg/convex-kv.svg)](https://www.npmjs.com/package/@hamzasaleemorg/convex-kv)
